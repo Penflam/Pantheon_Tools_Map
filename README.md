@@ -1,6 +1,8 @@
 PantheonRoadMap
 ===============
 
+![Aperçu de l'application](../image/screenshot.png)
+
 Description
 -----------
 PantheonRoadMap est une application AutoIt qui surveille le presse-papier pour détecter automatiquement les coordonnées issues de la commande `/jumploc` du jeu *Pantheon: Rise of the Fallen*.
