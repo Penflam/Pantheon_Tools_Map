@@ -56,11 +56,14 @@ Limitations
 - Le contrôle graphique de mini-carte est désactivé dans cette version.
 - Le navigateur intégré n'est plus utilisé (meilleure compatibilité avec les navigateurs modernes).
 
-Auteurs
--------
-Développé par Patapizza
+🇫🇷 Pour les utilisateurs non développeurs
 
----
+Si vous ne connaissez pas AutoIt, vous pouvez directement télécharger et utiliser la version exécutable :
+
+📁 window_exe/pantheonroadmap.exe
+
+    Note : Exécutable fourni tel quel. Exécutez uniquement si vous faites confiance à la source.
+
 
 
 
@@ -101,4 +104,11 @@ To customize the browser path:
 [Path]
 NavigatorPath=C:\Program Files\Mozilla Firefox\firefox.exe
 ```
+🇬🇧 For non-developers
+
+If you're not familiar with AutoIt, you can directly use the precompiled executable:
+
+📁 window_exe/pantheonroadmap.exe
+
+    Note: The executable is provided as-is. Run it only if you trust the source.
 
