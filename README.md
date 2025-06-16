@@ -1,7 +1,7 @@
 PantheonRoadMap
 ===============
 
-![Aperçu de l'application](../image/screenshot.png)
+![Aperçu de l'application](/Penflam/Pantheon_Tools_Map/raw/main/public/image/pantheonroadmap.png)
 
 Description
 -----------
