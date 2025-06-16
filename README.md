@@ -1,7 +1,8 @@
 PantheonRoadMap
 ===============
 
-![Aperçu de l'application](/Penflam/Pantheon_Tools_Map/raw/main/public/image/pantheonroadmap.png)
+
+![Aperçu de l'application](/image/pantheonroadmap.png "Aperçu de l'application").
 
 Description
 -----------
@@ -66,51 +67,70 @@ Si vous ne connaissez pas AutoIt, vous pouvez directement télécharger et utili
 
     Note : Exécutable fourni tel quel. Exécutez uniquement si vous faites confiance à la source.
 
+PantheonRoadMap
+===============
 
+![Application Preview](/image/pantheonroadmap.png "Application Preview")
 
+Description
+-----------
+PantheonRoadMap is an AutoIt application that monitors the clipboard to automatically detect coordinates from the `/jumploc` command used in the game *Pantheon: Rise of the Fallen*.
 
-# PantheonRoadMap - Auto location on Shalazam
+When a position is copied, the application generates a URL compatible with the https://shalazam.info website, allowing you to view that position (or several) directly on an interactive map.
 
-## Description
+Features
+--------
+- Automatic clipboard monitoring.
+- Detection and parsing of the `/jumploc` command.
+- Dynamic URL creation for the Shalazam map with one or more *pins*.
+- Automatic launch of Firefox (or another defined browser).
+- Minimal interface with zoom control, clipboard polling delay, and multi-pin mode.
+- Automatic reactivation of the game window after refresh.
+- Always-on-top application window.
+- "Go Shalazam!" button to manually open the map.
 
-**PantheonRoadMap** is an AutoIt tool designed to automatically detect `/jumploc` coordinates from *Pantheon: Rise of the Fallen*, and open them in [shalazam.info](https://shalazam.info/maps/1).
+Included Files
+--------------
+- `main.au3`: main script.
+- `ini.ini`: configuration file containing the browser path.
+- `README.txt`: this documentation file.
 
-It allows you to:
-- monitor clipboard for `/jumploc`,
-- store locations,
-- open the map centered on the latest location,
-- enable multi-pin mode,
-- control zoom and refresh delay.
+Configuration
+-------------
+The `ini.ini` file must be located in the same folder as the script. It contains the following section:
 
-## Features
-
-- Automatic clipboard monitoring for `/jumploc x y z heading`
-- URL generation for Shalazam map
-- Multi-pin support
-- Adjustable **zoom** (3–9)
-- Adjustable **delay** (500 ms to 10 s)
-- Quick access button: **"Go Shalazam!"**
-- Always on top window
-
-## Requirements
-
-- Windows
-- [AutoIt](https://www.autoitscript.com/site/autoit/)
-- Firefox browser (can be changed in `ini.ini`)
-
-## File `ini.ini`
-
-To customize the browser path:
-
-```ini
+```
 [Path]
 NavigatorPath=C:\Program Files\Mozilla Firefox\firefox.exe
+
 ```
-🇬🇧 For non-developers
 
-If you're not familiar with AutoIt, you can directly use the precompiled executable:
 
-📁 window_exe/pantheonroadmap.exe
+Make sure the specified path matches the actual location of Firefox (or your preferred browser). Otherwise, manually update the path.
 
-    Note: The executable is provided as-is. Run it only if you trust the source.
+Usage
+-----
+1. Launch *Pantheon* and log into your character.
+2. Run the `main.au3` script (via the SciTE editor or double-click if compiled).
+3. In-game, type `/jumploc` to copy your location to the clipboard.
+4. The app automatically detects the copied position and prepares a map.
+5. Click "Go Shalazam!" to open the map with your tracked positions.
 
+Adjustable Interface Settings:
+------------------------------
+- **Zoom**: range from 3 to 9.
+- **Delay**: clipboard check interval (500 ms to 10,000 ms).
+- **Track**: enable or disable multi-pin mode (if disabled, only one point is shown).
+
+Limitations
+-----------
+- The graphical mini-map control is disabled in this version.
+- The embedded browser is no longer used (better compatibility with modern browsers).
+
+For non-developer users
+-----------------------
+If you're unfamiliar with AutoIt, you can directly download and use the executable version:
+
+📁 `window_exe/pantheonroadmap.exe`
+
+> Note: The executable is provided as-is. Only run it if you trust the source.
