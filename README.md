@@ -69,7 +69,7 @@ Si vous ne connaissez pas AutoIt, vous pouvez directement télécharger et utili
 
 📁 window_exe/pantheonroadmapv2.exe ( detection de l'XP ajouté )
 
-    [Versions](window_exe/)
+    Versions: https://github.com/Penflam/Pantheon_Tools_Map/tree/main/window_exe
     
     Note : Exécutable fourni tel quel. Exécutez uniquement si vous faites confiance à la source.
 
