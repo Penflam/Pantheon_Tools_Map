@@ -7,22 +7,28 @@
 #include <Clipboard.au3>
 #include <Array.au3>
 #include <WinAPI.au3>
-
-Global $sIniPath = @ScriptDir & ".\ini.ini"
-Global $NavigatorPath = IniRead($sIniPath, "Path", "NavigatorPath", "C:\Program Files\Mozilla Firefox\firefox.exe")
-; === Paramètres ===
-Global $UserName = @UserName
-Global $LastClip = ""
-Global $aCoords[0]
-Global $g_iZoom = 8
-Global $pincounter = 0
-Global $g_bMultiPin = True ; par défaut activé
-Global $checkDelay = 2000
-Global $routeUrl = ""
+#include <File.au3>
+#include <FileConstants.au3>
+#include <WinAPIFiles.au3>
+#include "funcs\Globals.au3"
+#include "funcs\DetectXp.au3"
+#include "funcs\WinGet.au3"
+#include "funcs\Gui.au3"
 
 ; === Map taille arbitraire ===
 Global $mapW = 12000
 Global $mapH = 12000
+; === Détecter Firefox ===
+If FileExists($sIniPath) Then
+	$path = IniRead($sIniPath, "Path", "NavigatorPath", "")
+	if($path and $path<>"") Then 
+		$NavigatorPath = $path
+	EndIf
+Else
+    FileOpen($sIniPath, 1)
+	IniWriteSection  ( $sIniPath, "path", "NavigatorPath", $NavigatorPath)
+    FileClose($sIniPath)
+EndIf
 
 ; === Détecter Firefox ===
 If FileExists($NavigatorPath) Then
@@ -32,46 +38,30 @@ Else
     Exit
 EndIf
 
-; === GUI simplifiée ===
-local $UIy = 10
-GUICreate("RoadMap", 160, 120, -1, -1, $WS_CAPTION + $WS_SYSMENU)
-
-; === Menu principal ===
-Global $menuReset = GUICtrlCreateMenu("Reset")
-Global $menuQui = GUICtrlCreateMenu("?")
-
-; Sous-menu Reset
-Global $itemResetClear = GUICtrlCreateMenuItem("Reset Pins", $menuReset)
-; Sous-menu Aide
-Global $itemQuiAide = GUICtrlCreateMenuItem("À propos...", $menuQui)
-
-; UI Zoom
-Global $lblZoom = GUICtrlCreateLabel("Zoom: " & $g_iZoom, 10, $UIy, 70, 20)
-Global $btnZoomMoins = GUICtrlCreateButton("-", 90, $UIy-5, 30, 25)
-Global $btnZoomPlus  = GUICtrlCreateButton("+", 120, $UIy-5, 30, 25)
-
-; UI delay
-$UIy = $UIy + 27 ; 100
-Global $trackSpeed = GUICtrlCreateLabel("Delay: " & $checkDelay, 10, $UIy, 70, 20)
-Global $btnTrackSpeedMoins = GUICtrlCreateButton("-", 90, $UIy-5, 30, 25)
-Global $btnTrackSpeedPlus  = GUICtrlCreateButton("+", 120, $UIy-5, 30, 25)
-
-; UI Track
-$UIy = $UIy + 27 ; 100
-Global $chkMultiPin = GUICtrlCreateCheckbox("Track", 10, $UIy+2, 45, 20)
-GUICtrlSetState($chkMultiPin, $GUI_CHECKED)
-
-; UI Shalazam Btn
-Global $btnShalazam = GUICtrlCreateButton("Go Shalazam !", 60, $UIy, 90, 25)
-GUICtrlSetState($btnShalazam, $GUI_HIDE)
-
-GUISetState(@SW_SHOW)
-WinSetOnTop("[ACTIVE]", "", 1)
-
 ; === Démarrage vérification presse-papier ===
 AdlibRegister("_CheckClipboard", $checkDelay)
+
+Func _While_Check()
+	; ------ Game Open  -----------------
+	Local $GamePos = _FenetreGameExiste()
+	if($GamePos) Then		
+		If  ($Win_Handle) Then
+			; ------ Vérifie si la fenêtre est active (focus)
+			If WinActive($Win_Handle) Then
+				_set_buttonGame(True,True)
+				Local $datas_XP = _detetect_xp()
+			Else
+				$counterRead = $delayRead
+				_set_buttonGame(True,False)
+			EndIf
+		Else
+			_set_buttonGame(False,False)
+		EndIf
+	EndIf
+EndFunc
+
 While 1
-		Switch GUIGetMsg()
+	Switch GUIGetMsg()
 		Case $GUI_EVENT_CLOSE
 			Exit
 		Case $btnShalazam
@@ -100,15 +90,28 @@ While 1
 			EndIf
 		Case $chkMultiPin
 			$g_bMultiPin = (BitAND(GUICtrlRead($chkMultiPin), $GUI_CHECKED) <> 0)
+			;if($g_bMultiPin = 0) Then
+			;	GUICtrlSetState($btnShalazam, $GUI_HIDE)
+			;	if($pincounter > 0) Then GUICtrlSetState($btnShalazam, $GUI_SHOW)
+			;Else
+			;	if($pincounter > 1) Then
+			;			GUICtrlSetState($btnShalazam, $GUI_SHOW)
+			;	Else
+			;		GUICtrlSetState($btnShalazam, $GUI_HIDE)
+			;	EndIf
+			;EndIf
+				
 		Case $itemResetClear
 			_ClearPins()
 			$routeUrl = ""
+			GUICtrlSetData($menuCounter, "")
 		Case $itemQuiAide
 			MsgBox(64, "A propos", "Loc Tracker" & @CRLF & _
 				"Version : 1.0" & @CRLF & _
 				"Auteur : Patapizza 😎" & @CRLF & _
 				"Utilise les données du presse-papier pour suivre ta position dans le jeu grace au super site de shalazam.info.")
 	EndSwitch
+	_While_Check()
 WEnd
 
 ; === Fonctions ===
@@ -130,7 +133,7 @@ Func _CheckClipboard()
 	; Ajout en mémoire
 	_ArrayAdd($aCoords, $clip)
 	
-	If UBound($aCoords) > 0 Then GUICtrlSetState($btnShalazam, $GUI_SHOW)
+	If UBound($aCoords) > 1 Then GUICtrlSetState($btnShalazam, $GUI_SHOW)
 
 	Local $xRound = Round(Number($a[0]))
 	Local $zRound = Round(Number($a[2]))
@@ -139,7 +142,10 @@ Func _CheckClipboard()
 	Local $pinZ = Number($a[2])
 
 	$pincounter += 1
-
+	local $s = "s"
+	if ($pincounter<1) Then $s = ""
+	GUICtrlSetData($menuCounter,  $pincounter & " pin" & $s)
+	
 	Local $url = "https://shalazam.info/maps/1?zoom=" & $g_iZoom & "&x=" & $xRound-10 & "&y=" & $zRound+10
 
 	If $g_bMultiPin Then
@@ -166,7 +172,6 @@ Func _CheckClipboard()
 	EndIf
 
 EndFunc
-
 
 ; Sauvegarder
 FileDelete($sHistPath)
