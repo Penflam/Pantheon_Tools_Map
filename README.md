@@ -66,8 +66,11 @@ Limitations
 Si vous ne connaissez pas AutoIt, vous pouvez directement télécharger et utiliser la version exécutable :
 
 📁 window_exe/pantheonroadmap.exe
+
 📁 window_exe/pantheonroadmapv2.exe ( detection de l'XP ajouté )
 
+    [Versions](window_exe/)
+    
     Note : Exécutable fourni tel quel. Exécutez uniquement si vous faites confiance à la source.
 
 PantheonRoadMap
