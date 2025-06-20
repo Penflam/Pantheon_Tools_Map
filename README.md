@@ -3,8 +3,9 @@ PantheonRoadMap
 
 
 ![Aperçu de l'application](/image/pantheonroadmap.png "Aperçu de l'application").
-![Aperçu de shalzam.info](/image/pantheonshalazaminfo.png "Aperçu de shalzam.info").
 ![Aperçu de l'application XP](/image/pantheon-xp.png "Aperçu de l'application XP").
+
+![Aperçu de shalzam.info](/image/pantheonshalazaminfo.png "Aperçu de shalzam.info").
 
 Description
 -----------
